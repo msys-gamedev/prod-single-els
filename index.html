@@ -47,14 +47,14 @@
             }
         }
         function ExitGame(val, token) {
-          window.close();
+          self.close();
           alert('Exit Game 1');
             if (urlParams.has('lobby')) {
                 var lob = urlParams.get('lobby') + '/?' + urlParams.get('partner_id');
                 window.location.href = lob + '&token=' + token;
                 alert('Exit Game 2');
             } else {
-                window.close();
+                self.close();
                 alert('Exit Game 3');
                 window.location.href = "ayos://Exit?code=" + val;
                 // if (isIOS()) {
