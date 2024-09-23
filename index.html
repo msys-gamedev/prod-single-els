@@ -51,6 +51,7 @@
                 var lob = urlParams.get('lobby') + '/?' + urlParams.get('partner_id');
                 window.location.href = lob + '&token=' + token;
             } else {
+              console.log('Exit Game!');
                 window.location.href = "ayos://Exit?code=" + val;
                 window.close();
                 // if (isIOS()) {
