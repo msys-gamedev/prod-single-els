@@ -47,7 +47,7 @@
             }
         }
         function ExitGame(val, token) {
-          self.close();
+          window.open('about:blank', '_self').close();
           alert('Exit Game 1');
             if (urlParams.has('lobby')) {
                 var lob = urlParams.get('lobby') + '/?' + urlParams.get('partner_id');
@@ -56,7 +56,7 @@
             } else {
                 self.close();
                 alert('Exit Game 3');
-                window.location.href = "ayos://Exit?code=" + val;
+                window.open('about:blank', '_self').close();
                 // if (isIOS()) {
                 //     try {
                 //         alert('[EXIT][IOS] Exiting with code: ' + val);
