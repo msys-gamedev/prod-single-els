@@ -47,16 +47,16 @@
             }
         }
         function ExitGame(val, token) {
-          window.open('about:blank', '_self').close();
+          self.close();
           alert('Exit Game 1');
             if (urlParams.has('lobby')) {
                 var lob = urlParams.get('lobby') + '/?' + urlParams.get('partner_id');
                 window.location.href = lob + '&token=' + token;
                 alert('Exit Game 2');
             } else {
-                self.close();
+                window.close();
                 alert('Exit Game 3');
-                window.open('about:blank', '_self').close();
+            
                 // if (isIOS()) {
                 //     try {
                 //         alert('[EXIT][IOS] Exiting with code: ' + val);
@@ -77,7 +77,8 @@
             //ELSE exit unity webview
         }
         function OpenMultiplayer(link, val, token, bgm, sfx) {
-            window.location.href = link + '?auth=' + token + '&uuid=' + val + '&sett=' + bgm + '.' + sfx;
+           // window.location.href = link + '?auth=' + token + '&uuid=' + val + '&sett=' + bgm + '.' + sfx;
+            window.open( link + '?auth=' + token + '&uuid=' + val + '&sett=' + bgm + '.' + sfx, '_self');
         }
 
       var container = document.querySelector("#unity-container");
