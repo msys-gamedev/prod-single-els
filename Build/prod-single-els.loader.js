@@ -1,14 +1,4 @@
 function createUnityInstance(canvas, config, onProgress) {
-    function showMessage(type, message) {
-        if (type === "error") {
-            console.error(message);
-        } else if (type === "warning") {
-            console.warn(message);
-        } else {
-            console.log(message);
-        }
-    }
-
     function handleError(event) {
         let error = event.reason || event.error || event.message || "Unknown error";
         console.error("Unity WebGL Error:", error);
@@ -44,7 +34,7 @@ function createUnityInstance(canvas, config, onProgress) {
 
     function handleInstantiationError(error) {
         console.error("Failed to instantiate WebGL:", error);
-
+        
         document.body.innerHTML = `
             <div style="text-align: center; padding: 20px; margin-top: 15%;">
                 <h2>🚨 Game Load Failed</h2>
@@ -56,14 +46,18 @@ function createUnityInstance(canvas, config, onProgress) {
     }
 
     return new Promise((resolve, reject) => {
-        if (!window.SystemInfo || !window.SystemInfo.hasWebGL) {
-            console.warn("Your browser does not support WebGL.");
-        }
-        if (window.SystemInfo.hasWebGL === 1) {
-            console.warn("Your browser does not support WebGL 2, which is required for this content.");
-        }
-        if (!window.SystemInfo.hasWasm) {
-            console.warn("Your browser does not support WebAssembly.");
+        if (!window.SystemInfo) {
+            console.warn("SystemInfo is not available. The game might not work properly.");
+        } else {
+            if (!window.SystemInfo.hasWebGL) {
+                console.warn("Your browser does not support WebGL.");
+            }
+            if (window.SystemInfo.hasWebGL === 1) {
+                console.warn("Your browser does not support WebGL 2, which is required for this content.");
+            }
+            if (!window.SystemInfo.hasWasm) {
+                console.warn("Your browser does not support WebAssembly.");
+            }
         }
 
         fetch(config.frameworkUrl)
@@ -71,10 +65,18 @@ function createUnityInstance(canvas, config, onProgress) {
                 if (!response.ok) throw new Error(`Failed to load WebAssembly file: ${config.frameworkUrl}`);
                 return response;
             })
-            .then(() => instantiateAsync(config))
+            .then(() => {
+                if (typeof instantiateAsync !== "function") {
+                    throw new Error("instantiateAsync is not defined. Ensure you are using the correct Unity instantiation function.");
+                }
+                return instantiateAsync(config);
+            })
             .then(unityInstance => {
                 resolve(unityInstance);
             })
-            .catch(handleInstantiationError);
+            .catch(error => {
+                handleInstantiationError(error);
+                reject(error);
+            });
     });
 }
