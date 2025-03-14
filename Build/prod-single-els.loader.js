@@ -57,16 +57,13 @@ function createUnityInstance(canvas, config, onProgress) {
 
     return new Promise((resolve, reject) => {
         if (!window.SystemInfo || !window.SystemInfo.hasWebGL) {
-            reject("Your browser does not support WebGL.");
-            return;
+            console.warn("Your browser does not support WebGL.");
         }
         if (window.SystemInfo.hasWebGL === 1) {
-            reject("Your browser does not support WebGL 2, which is required for this content.");
-            return;
+            console.warn("Your browser does not support WebGL 2, which is required for this content.");
         }
         if (!window.SystemInfo.hasWasm) {
-            reject("Your browser does not support WebAssembly.");
-            return;
+            console.warn("Your browser does not support WebAssembly.");
         }
 
         fetch(config.frameworkUrl)
