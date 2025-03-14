@@ -44,7 +44,7 @@ function createUnityInstance(canvas, config, onProgress) {
 
     function handleInstantiationError(error) {
         console.error("Failed to instantiate WebGL:", error);
-        
+
         document.body.innerHTML = `
             <div style="text-align: center; padding: 20px; margin-top: 15%;">
                 <h2>🚨 Game Load Failed</h2>
@@ -55,27 +55,19 @@ function createUnityInstance(canvas, config, onProgress) {
         `;
     }
 
-    new Promise(function(e,t){
-        if(l.SystemInfo.hasWebGL) {
-            if(1 == l.SystemInfo.hasWebGL){
-                var r='Your browser does not support graphics API "WebGL 2" which is required for this content.';
-                "Safari"==l.SystemInfo.browser && parseInt(l.SystemInfo.browserVersion)<15 &&
-                (r+=l.SystemInfo.mobile||navigator.maxTouchPoints>1
-                    ? "\nUpgrade to iOS 15 or later."
-                    : "\nUpgrade to Safari 15 or later.");
-                t(r);
-            } else l.SystemInfo.hasWasm ? (
-                l.startupErrorHandler=t,
-                n(0),
-                l.postRun.push(function(){
-                    n(1),
-                    delete l.startupErrorHandler,
-                    e(g)
-                }),
-                d()
-            ) : t("Your browser does not support WebAssembly.");
-        } else t("Your browser does not support WebGL.");
-    })
+    return new Promise((resolve, reject) => {
+        if (!window.SystemInfo || !window.SystemInfo.hasWebGL) {
+            reject("Your browser does not support WebGL.");
+            return;
+        }
+        if (window.SystemInfo.hasWebGL === 1) {
+            reject("Your browser does not support WebGL 2, which is required for this content.");
+            return;
+        }
+        if (!window.SystemInfo.hasWasm) {
+            reject("Your browser does not support WebAssembly.");
+            return;
+        }
 
         fetch(config.frameworkUrl)
             .then(response => {
